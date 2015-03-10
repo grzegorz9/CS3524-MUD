@@ -110,14 +110,14 @@ public class World implements MUD {
     public boolean join(Player p) {
         if (!activePlayers.contains(p)) {
         	activePlayers.add(p);
-            locations.get(locations.indexOf(startingLocation)).addPlayer(p);
+            locations.get(locations.indexOf(startingLocation)).addPlayer(p.name);
             return true;
         }
         return false;
     }
 
     public void leave(Player p) {
-        this.locations.get(this.locations.indexOf(p.currentLocation)).removePlayer(p);
+        this.locations.get(this.locations.indexOf(p.currentLocation)).removePlayer(p.name);
         activePlayers.remove(p);
     }
 
@@ -151,12 +151,12 @@ public class World implements MUD {
     public void movePlayer(Player p, Location l) {
         if (this.locations.contains(l)) {
             Player plr = activePlayers.get(activePlayers.indexOf(p));
-            this.locations.get(this.locations.indexOf(plr.currentLocation)).removePlayer(p);
-            this.locations.get(this.locations.indexOf(l)).addPlayer(p);
+            this.locations.get(this.locations.indexOf(plr.currentLocation)).removePlayer(p.name);
+            this.locations.get(this.locations.indexOf(l)).addPlayer(p.name);
         }
     }
 
-    public List<Player> listPlayersAt(Location l) {
+    public List<String> listPlayersAt(Location l) {
         if (this.locations.contains(l)) {
             return this.locations.get(this.locations.indexOf(l)).players;
         }

@@ -13,7 +13,7 @@ public interface MUD extends Remote {
 	public String intro() throws RemoteException;
 	public Map<Direction, Location> listAdjacentTo(Location l) throws RemoteException;
 	public Location from(Location l, Direction d) throws RemoteException;
-	public List<Player> listPlayersAt(Location l) throws RemoteException;
+	public List<String> listPlayersAt(Location l) throws RemoteException;
 	public void movePlayer(Player p, Location destination) throws RemoteException;
 	public boolean isUniquePlayerName(String name) throws RemoteException;
 	public boolean isValidPlayerName(String name) throws RemoteException;

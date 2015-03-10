@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class Location implements Serializable {
     public String name;
     public String description;
-    public List<Player> players;
+    public List<String> players;
     public List<Item> items;
     public Map<Direction, Location> destinations;
 
@@ -17,7 +17,7 @@ public class Location implements Serializable {
         this.name         = name;
         this.description  = "";
         this.items        = new ArrayList<Item>();
-        this.players      = new ArrayList<Player>();
+        this.players      = new ArrayList<String>();
         this.destinations = new HashMap<Direction, Location>();
     }
 
@@ -25,7 +25,7 @@ public class Location implements Serializable {
         this.name         = name;
         this.description  = description;
         this.items        = new ArrayList<Item>();
-        this.players      = new ArrayList<Player>();
+        this.players      = new ArrayList<String>();
         this.destinations = new HashMap<Direction, Location>();
     }
 
@@ -33,7 +33,7 @@ public class Location implements Serializable {
         this.name         = name;
         this.description  = description;
         this.items        = items;
-        this.players      = new ArrayList<Player>();
+        this.players      = new ArrayList<String>();
         this.destinations = new HashMap<Direction, Location>();
     }
 
@@ -63,11 +63,11 @@ public class Location implements Serializable {
         return this.name.hashCode();
     }
 
-    public void addPlayer(Player p) {
+    public void addPlayer(String p) {
         this.players.add(p);
     }
 
-    public void removePlayer(Player p) {
+    public void removePlayer(String p) {
         this.players.remove(p);
     }
 

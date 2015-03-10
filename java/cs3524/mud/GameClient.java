@@ -98,12 +98,12 @@ public class GameClient
                 }
                 else if (command.equals("look")) {
                     System.out.println(player.look());
-                    List<Player> playersHere = gameService.listPlayersAt(player.currentLocation);
+                    List<String> playersHere = gameService.listPlayersAt(player.currentLocation);
                     if (playersHere.size() > 1) {
-                        playersHere.remove(player);
+                        playersHere.remove(player.name);
                         System.out.println("Other players at this location:");
-                        for (Player p : playersHere) {
-                            System.out.println(" -  " + p.name);
+                        for (String playerName : playersHere) {
+                            System.out.println(" -  " + playerName);
                         }
                     }
                 }
@@ -135,7 +135,7 @@ public class GameClient
                     System.out.println("<direction> can be any of:");
                     System.out.println(" -  north\n -  east\n -  south\n -  west");
                 }
-                else if (takeWithoutParams.matcher()) {
+                else if (takeWithoutParams.matches()) {
                     System.out.println("Usage:\ntake <item>");
                 }
                 else if (command.equals("where")) {
