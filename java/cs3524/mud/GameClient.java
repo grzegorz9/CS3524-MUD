@@ -77,7 +77,7 @@ public class GameClient
             String command = "";
             while (!command.equals("quit") && !command.equals("exit")) {
 
-                Pattern goCommandFormat = Pattern.compile("^go \\p{Lower}{4,5}");
+                Pattern goCommandFormat = Pattern.compile("^go (?:north|east|south|west)");
                 Pattern goCommandNoParams = Pattern.compile("^go$");
                 Pattern takeCmdWithoutParams = Pattern.compile("^take$");
 
