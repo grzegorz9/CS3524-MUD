@@ -1,6 +1,15 @@
 CS3524 Assignment
 =================
 
+Tutorial
+--------
+
+This short tutorial will show you how to get around in the MUD. It will also highlight some of the nice features of the game.
+
+### The first encounter
+When you run the game, first thing you have to do is to choose a name. It will be used to uniquely identify you throughout your journey through the MUD.
+Once you get this out of your way, you can start playing. There is a number of commands you can type in, but try typing `look` first. It will provide you with some useful information about you, your location and players around you.
+
 - `Item` class
 	Every item has its name, description and weight. `name` cannot be empty.
 - `Location`
@@ -44,13 +53,14 @@ Available commands:
 - `status`
 	Prints the player's name and lists the items carried in the user's backpack.
 
-- `go <direction>` 
+- `go <direction>`
 	Moves the character in the specified direction, which can be any of:
 	- north,
 	- south,
 	- east,
 	- west.
 
+	Prints the name of the users new location.
 	If there is nothing on the map in that direction, prints an error message.
 
 - `go back`
