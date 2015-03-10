@@ -19,6 +19,7 @@ public class Player implements Serializable {
     public Player(String name, double maxCarryWeight) {
         this.name           = name;
         this.maxCarryWeight = maxCarryWeight;
+        this.equipment      = new ArrayList<Item>();
     }
 
     public Player(String name, double maxCarryWeight, ArrayList<Item> equipment) {
