@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.StringTokenizer;
 
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
@@ -78,6 +79,8 @@ public class GameClient
             while (!command.equals("quit") && !command.equals("exit")) {
 
                 Pattern goCommandFormat = Pattern.compile("^go (?:north|east|south|west)");
+                Pattern takeCommandFormat = Pattern.compile("^take [\\w ]+$");
+
                 Pattern goCommandNoParams = Pattern.compile("^go$");
                 Pattern takeCmdWithoutParams = Pattern.compile("^take$");
 
@@ -85,8 +88,12 @@ public class GameClient
                 command = in.readLine().trim();
 
                 Matcher goMatcher = goCommandFormat.matcher(command);
+                Matcher takeCmdMatcher = takeCommandFormat.matcher(command);
                 Matcher goWithoutParams = goCommandNoParams.matcher(command);
                 Matcher takeWithoutParams = takeCmdWithoutParams.matcher(command);
+
+                List<Location> worldLocations = gameService.getLocations();
+                Location playerLocation = worldLocations.get(worldLocations.indexOf(player.currentLocation));
 
                 if (command.equals("help")) {
                     String response = gameService.manual();
@@ -97,7 +104,24 @@ public class GameClient
                     System.out.println(response);
                 }
                 else if (command.equals("look")) {
-                    System.out.println(player.look());
+                    String availableItems = "";
+                    if (!playerLocation.items.isEmpty()) {
+                        for (Item i : playerLocation.items) {
+                            if (playerLocation.items.indexOf(i) == playerLocation.items.size() - 1) {
+                                availableItems += " -  " + i.name;
+                            }
+                            else {
+                                availableItems += " -  " + i.name + System.lineSeparator();
+                            }
+                        }
+                        System.out.println(playerLocation.name + System.lineSeparator()
+                            + playerLocation.description + System.lineSeparator()
+                            + "Items:" + System.lineSeparator() + availableItems);
+                    }
+                    else {
+                        System.out.println(playerLocation.name + System.lineSeparator()
+                        + playerLocation.description);
+                    }
                     List<String> playersHere = gameService.listPlayersAt(player.currentLocation);
                     if (playersHere.size() > 1) {
                         playersHere.remove(player.name);
@@ -128,6 +152,18 @@ public class GameClient
                     }
                     else {
                         System.out.println("You can't go there.");
+                    }
+                }
+                else if (takeCmdMatcher.matches()) {
+                    StringTokenizer st = new StringTokenizer(command.substring(5), ",");
+                    while (st.hasMoreTokens()) {
+                        String itemSearchedFor = st.nextToken().trim();
+                        for (Item i : playerLocation.items) {
+                            if (i.name.equals(itemSearchedFor)) {
+                                player.equipment.add(i);
+                                gameService.removeItem(playerLocation, i);
+                            }
+                        }
                     }
                 }
                 else if (goWithoutParams.matches()) {

@@ -10,8 +10,8 @@ class Item implements Serializable {
         if (name.equals("")) {
             return;
         }
-        this.name        = name;
-        this.weight      = weight;
+        this.name   = name;
+        this.weight = weight;
     }
 
     public boolean equals(Object obj) {

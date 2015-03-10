@@ -103,6 +103,10 @@ public class World implements MUD {
         return startingLocation;
     }
 
+    public List<Location> getLocations() {
+        return locations;
+    }
+
     public String testMessage() throws RemoteException {
         return "Testing: 1, 2, 3.";
     }
@@ -168,6 +172,10 @@ public class World implements MUD {
             return false;
         }
         return true;
+    }
+
+    public void removeItem(Location l, Item i) {
+        this.locations.get(this.locations.indexOf(l)).items.remove(i);
     }
 
     public boolean isUniquePlayerName(String name) {

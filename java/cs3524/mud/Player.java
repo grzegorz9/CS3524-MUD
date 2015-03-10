@@ -28,25 +28,6 @@ public class Player implements Serializable {
         this.equipment      = equipment;
     }
 
-    public String look() {
-        String availableItems = "";
-        if (!currentLocation.items.isEmpty()) {
-            for (Item i : currentLocation.items) {
-                if (currentLocation.items.indexOf(i) == currentLocation.items.size() - 1) {
-                    availableItems += i.name;
-                }
-                else {
-                    availableItems += i.name + System.lineSeparator();
-                }
-            }
-            return this.currentLocation.name + System.lineSeparator()
-                + this.currentLocation.description + System.lineSeparator()
-                + "Items:" + System.lineSeparator() + availableItems;
-        }
-        return this.currentLocation.name + System.lineSeparator()
-            + this.currentLocation.description;
-    }
-
     public void take(Item item) {
         if (this.currentLocation.items.contains(item)) {
             double totalEquipmentWeight = 0;

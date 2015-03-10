@@ -17,4 +17,6 @@ public interface MUD extends Remote {
 	public void movePlayer(Player p, Location destination) throws RemoteException;
 	public boolean isUniquePlayerName(String name) throws RemoteException;
 	public boolean isValidPlayerName(String name) throws RemoteException;
+	public List<Location> getLocations() throws RemoteException;
+	public void removeItem(Location l, Item i) throws RemoteException;
 }

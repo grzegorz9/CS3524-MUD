@@ -17,7 +17,7 @@ public class GameServer {
             int registryport = Integer.parseInt(args[0]);
             int serviceport = Integer.parseInt(args[1]);
 
-            System.setProperty("java.security.policy", ".\\mud.policy");
+            System.setProperty("java.security.policy", "mud.policy");
             System.setSecurityManager(new RMISecurityManager());
 
             World gameService = new World(args[2]);
