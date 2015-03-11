@@ -1,5 +1,6 @@
 package cs3524.mud;
 
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -28,21 +29,31 @@ public class GameClient
         System.setProperty("java.security.policy", "mud.policy");
         System.setSecurityManager(new RMISecurityManager());
 
-        try 
-        {
+        try {
             String regURL = "rmi://" + hostname + ":" + registryport + "/GameServer";
 
-            MUD gameService = (MUD)Naming.lookup(regURL);
+            GameSrvrIntfc gameService = (GameSrvrIntfc)Naming.lookup(regURL);
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            MUD world = null;
+            System.out.println("Choose which MUD you want to join:");
+            while (world == null) {
+                System.out.println(gameService.listMUDs());
+                String choice = in.readLine().trim();
+                world = gameService.getMUD(choice);
+                if (world == null) {
+                    System.out.println("Couldn't find it. Try again.");
+                }
+            }
 
             System.out.println("Welcome to the MUD. What is your name?");
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            in = new BufferedReader(new InputStreamReader(System.in));
             Player player = null;
             boolean registered = false;
 
             while (registered == false) {
                 String username = in.readLine().trim();
-                if (gameService.isValidPlayerName(username)) {
-                    if (gameService.isUniquePlayerName(username)) {
+                if (world.isValidPlayerName(username)) {
+                    if (world.isUniquePlayerName(username)) {
                         System.out.print("Do you want to play as " + username + "? (yes/no) ");
                         String confirmation = in.readLine().trim();
                         Pattern positivePattern = Pattern.compile("^y(es){0,1}$", Pattern.CASE_INSENSITIVE);
@@ -52,8 +63,8 @@ public class GameClient
 
                         if (confirmation.equals("") || positiveMatcher.matches()) {
                             player = new Player(username, 100.0);
-                            player.currentLocation = gameService.getStartingLocation();
-                            if (!gameService.join(player)) {
+                            player.currentLocation = world.getStartingLocation();
+                            if (!world.join(player)) {
                                 System.out.println("There was a problem signing you up. Please try again.");
                             }
                             else {
@@ -92,15 +103,15 @@ public class GameClient
                 Matcher goWithoutParams = goCommandNoParams.matcher(command);
                 Matcher takeWithoutParams = takeCmdWithoutParams.matcher(command);
 
-                List<Location> worldLocations = gameService.getLocations();
+                List<Location> worldLocations = world.getLocations();
                 Location playerLocation = worldLocations.get(worldLocations.indexOf(player.currentLocation));
 
                 if (command.equals("help")) {
-                    String response = gameService.manual();
+                    String response = world.manual();
                     System.out.println(response);
                 }
                 else if (command.equals("?")) {
-                    String response = gameService.intro();
+                    String response = world.intro();
                     System.out.println(response);
                 }
                 else if (command.equals("look")) {
@@ -122,7 +133,7 @@ public class GameClient
                         System.out.println(playerLocation.name + System.lineSeparator()
                         + playerLocation.description);
                     }
-                    List<String> playersHere = gameService.listPlayersAt(player.currentLocation);
+                    List<String> playersHere = world.listPlayersAt(player.currentLocation);
                     if (playersHere.size() > 1) {
                         playersHere.remove(player.name);
                         System.out.println("Other players at this location:");
@@ -145,9 +156,9 @@ public class GameClient
                 }
                 else if (goMatcher.matches()) {
                     Direction direction = Direction.valueOf(command.substring(3).toUpperCase());
-                    Location destination = gameService.from(player.currentLocation, direction);
+                    Location destination = world.from(player.currentLocation, direction);
                     if (destination != null) {
-                        gameService.movePlayer(player, destination);
+                        world.movePlayer(player, destination);
                         player.currentLocation = destination;
                     }
                     else {
@@ -161,7 +172,7 @@ public class GameClient
                         for (Item i : playerLocation.items) {
                             if (i.name.equals(itemSearchedFor)) {
                                 player.equipment.add(i);
-                                gameService.removeItem(playerLocation, i);
+                                world.removeItem(playerLocation, i);
                             }
                         }
                     }
@@ -176,7 +187,7 @@ public class GameClient
                 }
                 else if (command.equals("where")) {
                     System.out.println("Your current location is " + player.currentLocation.name);
-                    Map<Direction, Location> possibleDestinations = gameService.listAdjacentTo(player.currentLocation);
+                    Map<Direction, Location> possibleDestinations = world.listAdjacentTo(player.currentLocation);
                     if (possibleDestinations != null) {
                         System.out.println("You can go:");
                         List<Map.Entry<Direction, Location>> destinationsList =
@@ -188,7 +199,7 @@ public class GameClient
                     }
                 }
                 else if (command.equals("exit") || command.equals("quit")) {
-                    gameService.leave(player);
+                    world.leave(player);
                     System.out.println("Leaving MUD.");
                 }
                 else {
@@ -196,9 +207,8 @@ public class GameClient
                 }
             }
         }
-        catch (java.io.IOException e) {
-            System.err.println("I/O error.");
-            System.err.println(e.getMessage());
+        catch (IOException ioe) {
+            ioe.printStackTrace();
         }
         catch (java.rmi.NotBoundException e) {
             System.err.println("Server not bound.");

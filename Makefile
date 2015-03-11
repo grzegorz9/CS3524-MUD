@@ -9,6 +9,8 @@ build:
 	javac -cp class -d class java/cs3524/mud/Player.java
 	javac -cp class -d class java/cs3524/mud/MUD.java
 	javac -cp class -d class java/cs3524/mud/World.java
+	javac -cp class -d class java/cs3524/mud/GameSrvrIntfc.java
 	javac -cp class -d class java/cs3524/mud/GameServer.java
 	javac -cp class -d class java/cs3524/mud/GameClient.java
+	javac -cp class -d class java/cs3524/mud/Server.java
 	
