@@ -92,15 +92,7 @@ public class Player implements Serializable {
      * @param item      the item to be picked up
      */
     public void take(Item item) {
-        if (this.currentLocation.listItems().contains(item)) {
-            double totalEquipmentWeight = 0;
-            for (Item i : this.equipment) {
-                totalEquipmentWeight += i.weight;
-            }
-            if (item.weight + totalEquipmentWeight <= this.maxCarryWeight) {
-                this.equipment.add(item);
-            }
-        }
+        
     }
 
     /**
@@ -127,12 +119,30 @@ public class Player implements Serializable {
     }
 
     /**
-     * Adds an item to player's equipment list.
+     * Adds an item to the player's equipment list.
      *
-     * @param i     the item to be added to the player's equipment
+     * @param item     the item to be added to the player's equipment
      */
-    public void addToEquipment(Item i) {
-        this.equipment.add(i);
+    public void addToEquipment(Item item) {
+        if (this.currentLocation.listItems().contains(item)) {
+            double totalEquipmentWeight = 0;
+            for (Item i : this.equipment) {
+                totalEquipmentWeight += i.weight;
+            }
+            if (item.weight + totalEquipmentWeight <= this.maxCarryWeight) {
+                this.equipment.add(item);
+            }
+        }
+    }
+
+    /**
+     * Removes an item from the player's equipment, and places it
+     * in the player's current location.
+     *
+     * @param i     the item to be dropped
+     */
+    public void removeFromEquipment(Item i) {
+        this.equipment.remove(i);
     }
 
     /**

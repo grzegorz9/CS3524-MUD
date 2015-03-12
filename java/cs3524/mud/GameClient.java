@@ -13,7 +13,13 @@ import java.util.StringTokenizer;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
+import java.rmi.NotBoundException;
 
+/**
+ * The implementaion of a client, which allows the interaction with an MUD.
+ *
+ * @author Grzegorz 'Greg' Muszynski <g.muszynski.12@aberdeen.ac.uk>
+ */
 
 public class GameClient
 {
@@ -29,12 +35,15 @@ public class GameClient
         System.setProperty("java.security.policy", "mud.policy");
         System.setSecurityManager(new RMISecurityManager());
 
+        MUD world = null;
+        Player player = null;
+        boolean registered = false;
+
         try {
             String regURL = "rmi://" + hostname + ":" + registryport + "/GameServer";
 
             GameSrvrIntfc gameService = (GameSrvrIntfc)Naming.lookup(regURL);
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-            MUD world = null;
             System.out.println("Choose which MUD you want to join:");
             while (world == null) {
                 for (MUD wrld : gameService.listMUDs()) {
@@ -51,8 +60,7 @@ public class GameClient
 
             System.out.println("Welcome to the MUD. What is your name?");
             in = new BufferedReader(new InputStreamReader(System.in));
-            Player player = null;
-            boolean registered = false;
+            
 
             while (registered == false) {
                 System.out.print("> ");
@@ -94,7 +102,6 @@ public class GameClient
             System.out.println("Type 'help' or ?' if you need help.");
             String command = "";
             while (!command.equals("quit") && !command.equals("exit")) {
-
                 Pattern goCommandFormat = Pattern.compile("^go (?:north|east|south|west)");
                 Pattern takeCommandFormat = Pattern.compile("^take [\\w ]+$");
 
@@ -106,6 +113,7 @@ public class GameClient
 
                 Matcher goMatcher = goCommandFormat.matcher(command);
                 Matcher takeCmdMatcher = takeCommandFormat.matcher(command);
+
                 Matcher goWithoutParams = goCommandNoParams.matcher(command);
                 Matcher takeWithoutParams = takeCmdWithoutParams.matcher(command);
 
@@ -215,9 +223,14 @@ public class GameClient
         catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        catch (java.rmi.NotBoundException e) {
+        catch (NotBoundException e) {
             System.err.println("Server not bound.");
             System.err.println(e.getMessage());
+        }
+        finally {
+            if ((player != null) && (registered == true)) {
+                world.leave(player);
+            }
         }
     }
 }

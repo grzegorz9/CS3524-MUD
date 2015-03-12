@@ -247,6 +247,10 @@ public class World implements MUD {
         return false;
     }
 
+    public void placeItem(Location l, Item i) {
+        this.locations.get(this.locations.indexOf(l)).listItems().add(i);
+    }
+
     public void removeItem(Location l, Item i) {
         this.locations.get(this.locations.indexOf(l)).listItems().remove(i);
     }

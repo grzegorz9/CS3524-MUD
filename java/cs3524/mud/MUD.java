@@ -106,6 +106,14 @@ public interface MUD extends Remote {
     public List<Location> getLocations() throws RemoteException;
 
     /**
+     * Places an item at a given location.
+     *
+     * @param l     the target location
+     * @param i     the target item to be added
+     */
+    public void placeItem(Location l, Item i) throws RemoteException;
+
+    /**
 	 * Removes an item from a given location.
      *
      * @param l     the target location

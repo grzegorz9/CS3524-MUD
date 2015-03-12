@@ -37,6 +37,7 @@ public class Server {
         GameServer gameServer = new GameServer(serviceport, maxNumOfMUDs);
         int mudCount = 0;
         System.out.println("You can now add new worlds");
+        System.out.print("> ");
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         try {
             String line = in.readLine().trim();
@@ -54,8 +55,9 @@ public class Server {
                     gameServer.addMUD(mud);
                     mudCount += 1;
 
-                    System.out.println("Creating a new world " + worldName + " from " + mapFile + ", " + itemFile);
+                    System.out.println("Creating new world " + worldName + " from " + mapFile + ", " + itemFile);
                     if (mudCount == maxNumOfMUDs) { break; }
+                    System.out.print("> ");
                     line = in.readLine().trim();
                 }
             }

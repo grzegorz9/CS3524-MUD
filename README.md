@@ -4,32 +4,68 @@ CS3524 Assignment
 Tutorial
 --------
 
-This short tutorial will show you how to get around in the MUD. It will also highlight some of the nice features of the game.
+This short tutorial will show you how to get around in the MUD. It will also highlight some of the features of the game.
 
-### The first encounter
-When you run the game, first thing you have to do is to choose a name. It will be used to uniquely identify you throughout your journey through the MUD.
-Once you get this out of your way, you can start playing. There is a number of commands you can type in, but try typing `look` first. It will provide you with some useful information about you, your location and players around you.
+### Building
+First, make sure you are in the project's root directory.
+If you are on Linux, type
+```
+make build
+```
 
-- `Item` class
-	Every item has its name, description and weight. `name` cannot be empty.
-- `Location`
-	Every location has a description and a list of stored items. An `Item` can be stored at a location by calling the `store()`	method on a location. Every location can be explored. By calling `explore()` on a location, you get a list of possible actions. `name` cannot be empty.
-- `Path`
-	A path is an edge connecting two `Location` objects (i.e. vertices).
-- `Player`
-	Every player has a name, maximum total weight of the carried items and a list of items carried at the moment. `name` cannot be empty.
+If you are using Windows, type
+```
+.\build
+```
 
-- `MUD`
-	+ `join(Player p)` adds a player to the MUD
-	+ `leave(Player p)` removes a player from the MUD
-	+ `getStartingLocation()`
-	+ `manual()`
-	+ `intro()`
-	+ `Map<Direction, Location> listAdjacentTo(Location l)`
-	+ `from(Location l, Direction d)`
-		Returns a location accessible from the location `l`, when heading in the direction `d`. If there is nothing in that direction, returns null.
-	+ `public List<Player> listPlayersAt(Location l)`
-	+ `movePlayer(Player p, Location destination)` moves player to a given location
+### Starting the server
+To start the server, `cd` into the `class` directory and type:
+```
+java cs3524.mud.Server <rmi_port> <server_port> <max_number_of_MUD>
+```
+You will be presented with a prompt, which allows you to create a new world on the server. The commands are like this
+```
+<world_name> <map_file> <items_file>
+```
+#### Warning!
+Please make sure, that the map and item files are in the same directory from which you run the server, because otherwise, it might be impossible to access those files due to file permissions.
+
+### Starting the client
+To start the client, `cd` into the `class` directory and type:
+```
+java cs3524.mud.GameClient <hostname> <rmi_port>
+```
+This will start the game.
+
+### First Steps
+When you run the game, first thing you have to do is to choose which world you want to join. Simply type one of the names from the list.
+
+Then choose a name for your character. It will be used to uniquely identify you in your journey through the MUD, so sometimes you might have to choose a different name, if there is someone playing with this name already.
+
+With these formalities out of the way, you can start playing. There is a number of commands you can type in, but first, try typing
+```
+look
+```
+It will give you some useful information about your character, your location and players around you.
+Once you have an idea about your whereabouts, try typing
+```
+where
+```
+This will tell you where you can go from here. Choose any destination from the ones listed and type `go <direction>`, for example
+```
+go north
+```
+Now, type `look` again, to see what items are at this location. Choose one, then type
+```
+take <name_of_that_item>
+```
+To see if you are now carrying it, type
+```
+status
+```
+If everything went well, you should see that item listed in your equipment.
+
+That's the end of this tutorial. Feel free to explore. Below is a list of all commands available in the game.
 
 Available commands:
 -------------------
@@ -41,34 +77,21 @@ Available commands:
 - `help`
 	Displays a short message with the most useful instructions.
 
-- `commands`
-	Displays the list of commands.
+- `?`
+	Displays a tip on how to start.
 
 - `where`
 	Displays player's current location and lists destinations accessible from that place.
 
 - `look`
-	Prints a description of the current user location and list the items at this location.
+	Prints a description of the current user location, list other players and the items at this location.
 
 - `status`
 	Prints the player's name and lists the items carried in the user's backpack.
 
 - `go <direction>`
-	Moves the character in the specified direction, which can be any of:
-	- north,
-	- south,
-	- east,
-	- west.
-
-	Prints the name of the users new location.
-	If there is nothing on the map in that direction, prints an error message.
-
-- `go back`
-	Moves the character to the previous location.
+	Moves the character in any of the four basic directions. Then, prints the name of the user's new location.
+	If there is nothing on the map in that direction, prints a warning message.
 
 - `take <item>`
-	Adds the specified item to the character's equipment. If an item is not found at the current location, prints an error message.
-
-- `drop <item>`
-	Removes the specified item from the character's equipment and stores it in the character's current location.
-	
+	Adds the specified item to the character's equipment, provided that item can be found at the current location.
