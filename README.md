@@ -1,6 +1,8 @@
 CS3524 Assignment
 =================
 
+The documentation for this assignment has been generated using the `javadoc` tool. To access it, open `doc/index.html` in your browser. What follows is a short demonstration on how to use the whole system.
+
 Tutorial
 --------
 
@@ -23,10 +25,24 @@ To start the server, `cd` into the `class` directory and type:
 ```
 java cs3524.mud.Server <rmi_port> <server_port> <max_number_of_MUD>
 ```
-You will be presented with a prompt, which allows you to create a new world on the server. The commands are like this
+You will be presented with a prompt, which allows you to create a new world on the server. The commands must have a format like this
 ```
 <world_name> <map_file> <items_file>
 ```
+Please note, that example files are in the `worlds` directory. If you copy them to `class`, you can try this
+```
+Vikings vikings.map vikings.items
+```
+followed by ENTER. Then,
+```
+Elves elves.map elves.items
+```
+This will create two worlds in the MUD. If there is still a prompt, you can type
+```
+end
+```
+to finish creating, and register the server with what you have.
+
 #### Warning!
 Please make sure, that the map and item files are in the same directory from which you run the server, because otherwise, it might be impossible to access those files due to file permissions.
 
