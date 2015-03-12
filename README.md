@@ -85,8 +85,6 @@ That's the end of this tutorial. Feel free to explore. Below is a list of all co
 
 Available commands:
 -------------------
-- `help`
-
 - `exit` or `quit`
 	Removes the player from the MUD and closes the client application.
 
