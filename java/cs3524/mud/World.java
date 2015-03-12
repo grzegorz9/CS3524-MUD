@@ -72,6 +72,7 @@ public class World implements MUD {
                     l.getDestinations().put(dir, d);
                     d.getDestinations().put((oppositeTo(dir)), l);
                     this.paths.add(new Path(l, d, dir, descr));
+                    this.paths.add(new Path(d, l, oppositeTo(dir), descr));
                 }
             }
             this.startingLocation = this.locations.get(0);
@@ -157,6 +158,10 @@ public class World implements MUD {
             }
         }
         return null;
+    }
+
+    public List<Path> listPaths() {
+        return this.paths;
     }
 
     public void movePlayer(Player p, Location l) {

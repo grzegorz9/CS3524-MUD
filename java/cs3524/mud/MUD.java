@@ -50,6 +50,9 @@ public interface MUD extends Remote {
     /* Lists player names at a given location */
     public List<String> listPlayersAt(Location l) throws RemoteException;
 
+    /* Lists all paths in an MUD */
+    public List<Path> listPaths() throws RemoteException;
+
     /* Moves a player to a given destination location */
     public void movePlayer(Player p, Location destination) throws RemoteException;
 

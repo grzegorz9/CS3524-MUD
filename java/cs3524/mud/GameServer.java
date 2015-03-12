@@ -1,5 +1,7 @@
 package cs3524.mud;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.rmi.RemoteException;
 
@@ -18,12 +20,12 @@ class GameServer implements GameSrvrIntfc {
         return this.maxMUDs;
     }
 
-    public String listMUDs() throws RemoteException {
-        String response = "";
+    public List<MUD> listMUDs() throws RemoteException {
+        List<MUD> allMUDs = new ArrayList<MUD>();
         for (MUD world : worlds) {
-            response += " -  " + world.getName() + System.lineSeparator();
+            allMUDs.add(world);
         }
-        return response;
+        return allMUDs;
     }
 
     public void addMUD(MUD m) {

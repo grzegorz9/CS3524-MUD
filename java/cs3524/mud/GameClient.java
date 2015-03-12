@@ -37,11 +37,15 @@ public class GameClient
             MUD world = null;
             System.out.println("Choose which MUD you want to join:");
             while (world == null) {
-                System.out.println(gameService.listMUDs());
+                for (MUD wrld : gameService.listMUDs()) {
+                    System.out.println(" -  " + wrld.getName());
+                }
+
+                System.out.print("> ");
                 String choice = in.readLine().trim();
                 world = gameService.getMUD(choice);
                 if (world == null) {
-                    System.out.println("Couldn't find it. Try again.");
+                    System.out.println("Couldn't find it. Try again. Here are your options:");
                 }
             }
 
@@ -51,6 +55,7 @@ public class GameClient
             boolean registered = false;
 
             while (registered == false) {
+                System.out.print("> ");
                 String username = in.readLine().trim();
                 if (world.isValidPlayerName(username)) {
                     if (world.isUniquePlayerName(username)) {
@@ -72,7 +77,7 @@ public class GameClient
                             }
                         }
                         else if (negativeMatcher.matches()) {
-                            System.out.print("What is your name? ");
+                            System.out.println("What is your name? ");
                         }
                     }
                     else {
@@ -186,15 +191,14 @@ public class GameClient
                     System.out.println("Usage:\ntake <item>");
                 }
                 else if (command.equals("where")) {
-                    System.out.println("Your current location is " + player.getCurrentLocation().getName());
                     Map<Direction, Location> possibleDestinations = world.listAdjacentTo(player.getCurrentLocation());
                     if (possibleDestinations != null) {
-                        System.out.println("You can go:");
                         List<Map.Entry<Direction, Location>> destinationsList =
                             new ArrayList<Map.Entry<Direction, Location>>(possibleDestinations.entrySet());
+
                         for (Map.Entry<Direction, Location> d : destinationsList) {
-                            System.out.println(" -> " + d.getKey().toString().toLowerCase()
-                                + " to " + d.getValue().getName());
+                            Path p = new Path(player.getCurrentLocation(), d.getValue(), d.getKey(), null);
+                            System.out.println(world.listPaths().get(world.listPaths().indexOf(p)).toString());
                         }                        
                     }
                 }
