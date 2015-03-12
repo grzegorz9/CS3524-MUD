@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class World implements MUD {
 	private String name;
@@ -172,10 +174,26 @@ public class World implements MUD {
     }
 
     public boolean isValidPlayerName(String name) {
+        Pattern correctPlayerName = Pattern.compile("^[\\w ]{3,}$");
+        Pattern multipleSpaces = Pattern.compile(" +");
+        Pattern digitsOnly = Pattern.compile("^\\d+$");
+        Pattern startingWithSpace = Pattern.compile("^ ");
+        Pattern endingWithSpace = Pattern.compile(" $");
+        Matcher playerNameMatcher = correctPlayerName.matcher(name);
+        Matcher multiSpaceMatcher = multipleSpaces.matcher(name);
+        Matcher digitsOnlyMatcher = digitsOnly.matcher(name);
+        Matcher wrongFirstChar = startingWithSpace.matcher(name);
+        Matcher wrongLastChar = endingWithSpace.matcher(name);
+
         if (name.isEmpty()) {
             return false;
         }
-        return true;
+        else if (playerNameMatcher.matches()
+                && !multiSpaceMatcher.matches() && !wrongFirstChar.matches()
+                && !wrongLastChar.matches() && !digitsOnlyMatcher.matches()) {
+                return true;
+        }
+        return false;
     }
 
     public void removeItem(Location l, Item i) {
