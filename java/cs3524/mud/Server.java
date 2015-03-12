@@ -10,10 +10,16 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+/**
+ * The program to start up an actual server.
+ *
+ * @author Grzegorz 'Greg' Muszynski <g.muszynski.12@aberdeen.ac.uk>
+ */
+
 public class Server {
     public static void main(String args[]) {
-        if (args.length < 2) {
-            System.err.println("Usage:\njava GameServer <registryport> <serverport>");
+        if (args.length < 3) {
+            System.err.println("Usage:\njava GameServer <registryport> <serverport> <maxNumOfMUDs>");
             return;
         }
         String hostname = "127.0.0.1";

@@ -69,7 +69,8 @@ public class GameClient
                         if (confirmation.equals("") || positiveMatcher.matches()) {
                             player = new Player(username, 100.0);
                             player.setCurrentLocation(world.getStartingLocation());
-                            if (!world.join(player)) {
+                            world.join(player);
+                            if (!world.listPlayersAt(world.getStartingLocation()).contains(player.getName())) {
                                 System.out.println("There was a problem signing you up. Please try again.");
                             }
                             else {

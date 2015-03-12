@@ -9,41 +9,72 @@ import java.util.StringTokenizer;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+/**
+ * The implementation of a world with locations, paths and players.
+ * 
+ * @author Grzegorz 'Greg' Muszynski <g.muszynski.12@aberdeen.ac.uk>
+ */
+
 public class World implements MUD {
+    /** The name of the world. */
 	private String name;
+
+    /** The starting location for any new user created in this world. */
 	private Location startingLocation;
-    private List<Location> locations;   // i.e. vertices
-    private List<Path> paths;    // i.e. edges
+
+    /** The complete list of locations on the map. */
+    private List<Location> locations;
+
+    /** The complete list of paths on the map. */
+    private List<Path> paths;
+
+    /** The list of all players registered within this world. */
 	private List<Player> activePlayers;
 
+    /** A short list of commands for the users. */
+    private final String manual =
+        "Commands:\n"         +
+        " -  help\n"           +
+        " -  look\n"    +
+        " -  go <direction>\n" +
+        " -  take <items>";
+    
+    /** A brief introduction for new users. */
+    private final String introTutorial =
+        "Try typing 'look' to find out where you are.\n" +
+        "If you feel adventureous, you can visit any of the destinations\n" +
+        "by typing 'go <direction>', where <direction> can be any of:\n" +
+        "north, east, south or west.";
+    
+    /**
+     * Creates a new world with a given name.
+     *
+     * @param name  the name of the new world
+     */
+    public World(String name) throws RemoteException {
+        this.name = name;
+        this.locations = new ArrayList<Location>();
+        this.paths = new ArrayList<Path>();
+        this.activePlayers = new ArrayList<Player>();
+    }
+
+    /** Returns the name of the world. */
     public String getName() {
         return this.name;
     }
 
-	private final String manual =
-		"Commands:\n"         +
-		" -  help\n"           +
-		" -  look\n"    +
-		" -  go <direction>\n" +
-		" -  take <items>";
-        
-	private final String introTutorial =
-		"Try typing 'look' to find out where you are.\n" +
-		"If you feel adventureous, you can visit any of the destinations\n" +
-		"by typing 'go <direction>', where <direction> can be any of:\n" +
-		"north, east, south or west.";
-    
-    public World(String name) throws RemoteException {
-    	this.name = name;
-        this.locations = new ArrayList<Location>();
-        this.paths = new ArrayList<Path>();
-    	this.activePlayers = new ArrayList<Player>();
-    }
-
+    /**
+     * Generates a map for the world.
+     * This method requires a file, which map definitions
+     * in the specified format. Based on the input, a number of
+     * locations is generated. These locations are then connected
+     * through paths.
+     *
+     * @param filename  the name of the file containing the map
+     */
     public void generateMap(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             for (String line; (line = br.readLine()) != null; ) {
@@ -85,6 +116,13 @@ public class World implements MUD {
         }
     }
 
+    /**
+     * Populates the map with items.
+     * This method requires a file, which contains item
+     * definitions and their respective locations.
+     *
+     * @param filename  the name of the file containing the items
+     */
     public void placeItems(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             for (String line; (line = br.readLine()) != null; ) {
@@ -107,27 +145,34 @@ public class World implements MUD {
         }
     }
 
+    /** Returns the starting point for every new player created in this world. */
     public Location getStartingLocation() throws RemoteException {
         return startingLocation;
     }
 
+    /** Returns the list of all locations on the map of the world. */
     public List<Location> getLocations() {
         return locations;
     }
 
-    public String testMessage() throws RemoteException {
-        return "Testing: 1, 2, 3.";
-    }
-
-    public boolean join(Player p) {
+    /**
+     * Adds a player to the world.
+     *
+     * @param p     the player to be added
+     */
+    public void join(Player p) {
         if (!activePlayers.contains(p)) {
-        	activePlayers.add(p);
+            activePlayers.add(p);
             locations.get(locations.indexOf(startingLocation)).addPlayer(p.getName());
-            return true;
         }
-        return false;
     }
 
+
+    /**
+     * Removes a player to the world.
+     *
+     * @param p     the player to be removed
+     */
     public void leave(Player p) {
         this.locations.get(this.locations.indexOf(p.getCurrentLocation())).removePlayer(p.getName());
         activePlayers.remove(p);
@@ -213,6 +258,11 @@ public class World implements MUD {
         return true;
     }
 
+    /**
+     * A helper method to define directions opposite to each other.
+     * Used by the map generator to create paths in both directions,
+     * since a world map is represented by an undirected graph.
+     */
     public static Direction oppositeTo(Direction d) {
         if (d == Direction.NORTH) {
             return Direction.SOUTH;
