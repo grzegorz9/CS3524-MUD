@@ -2,7 +2,7 @@ package cs3524.mud;
 
 import java.io.Serializable;
 
-class Item implements Serializable {
+public class Item implements Serializable {
     public String name;
     public double weight;
 

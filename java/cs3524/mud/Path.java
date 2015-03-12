@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author Grzegorz 'Greg' Muszynski <g.muszynski.12@aberdeen.ac.uk>
  * 
  */
-class Path implements Serializable {
+public class Path implements Serializable {
     public Location startLocation;
     public Location destination;
     public Direction direction;

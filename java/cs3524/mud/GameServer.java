@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.rmi.RemoteException;
 
-class GameServer implements GameSrvrIntfc {
+public class GameServer implements GameSrvrIntfc {
     private int serverPort;
     private int maxMUDs;
     private Vector<MUD> worlds;
