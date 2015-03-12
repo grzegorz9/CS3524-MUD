@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Player implements Serializable {
-    public String name;
-    public double maxCarryWeight;
-    public List<Item> equipment;
-    public Location currentLocation;
+    private String name;
+    private double maxCarryWeight;
+    private List<Item> equipment;
+    private Location currentLocation;
 
     public Player(String name) {
         this.name           = name;
@@ -28,18 +28,6 @@ public class Player implements Serializable {
         this.equipment      = equipment;
     }
 
-    public void take(Item item) {
-        if (this.currentLocation.items.contains(item)) {
-            double totalEquipmentWeight = 0;
-            for (Item i : this.equipment) {
-                totalEquipmentWeight += i.weight;
-            }
-            if (item.weight + totalEquipmentWeight <= this.maxCarryWeight) {
-                this.equipment.add(item);
-            }
-        }
-    }
-
     public boolean equals(Object obj) {
         if (!(obj instanceof Player)) {
             return false;
@@ -56,5 +44,37 @@ public class Player implements Serializable {
                 return false;
             }
         }
+    }
+
+    public void take(Item item) {
+        if (this.currentLocation.listItems().contains(item)) {
+            double totalEquipmentWeight = 0;
+            for (Item i : this.equipment) {
+                totalEquipmentWeight += i.weight;
+            }
+            if (item.weight + totalEquipmentWeight <= this.maxCarryWeight) {
+                this.equipment.add(item);
+            }
+        }
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Location getCurrentLocation() {
+        return this.currentLocation;
+    }
+
+    public void setCurrentLocation(Location l) {
+        this.currentLocation = l;
+    }
+
+    public void addToEquipment(Item i) {
+        this.equipment.add(i);
+    }
+
+    public List<Item> listEquipment() {
+        return this.equipment;
     }
 }

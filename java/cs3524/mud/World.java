@@ -66,8 +66,8 @@ public class World implements MUD {
                     else {
                         d = this.locations.get(this.locations.indexOf(d));
                     }
-                    l.destinations.put(dir, d);
-                    d.destinations.put((oppositeTo(dir)), l);
+                    l.getDestinations().put(dir, d);
+                    d.getDestinations().put((oppositeTo(dir)), l);
                     this.paths.add(new Path(l, d, dir, descr));
                 }
             }
@@ -91,7 +91,7 @@ public class World implements MUD {
                     double itemWeight = Double.parseDouble(st.nextToken().trim());
 
                     Item newItem = new Item(itemName, itemWeight);
-                    this.locations.get(this.locations.indexOf(new Location(locName))).items.add(newItem);
+                    this.locations.get(this.locations.indexOf(new Location(locName))).listItems().add(newItem);
                 }
             }
         }
@@ -118,14 +118,14 @@ public class World implements MUD {
     public boolean join(Player p) {
         if (!activePlayers.contains(p)) {
         	activePlayers.add(p);
-            locations.get(locations.indexOf(startingLocation)).addPlayer(p.name);
+            locations.get(locations.indexOf(startingLocation)).addPlayer(p.getName());
             return true;
         }
         return false;
     }
 
     public void leave(Player p) {
-        this.locations.get(this.locations.indexOf(p.currentLocation)).removePlayer(p.name);
+        this.locations.get(this.locations.indexOf(p.getCurrentLocation())).removePlayer(p.getName());
         activePlayers.remove(p);
     }
 
@@ -139,7 +139,7 @@ public class World implements MUD {
 
     public Map<Direction, Location> listAdjacentTo(Location l) {
         if (this.locations.contains(l)) {
-            return this.locations.get(this.locations.indexOf(l)).destinations;
+            return this.locations.get(this.locations.indexOf(l)).getDestinations();
         }
         else {
             return null;
@@ -159,14 +159,14 @@ public class World implements MUD {
     public void movePlayer(Player p, Location l) {
         if (this.locations.contains(l)) {
             Player plr = activePlayers.get(activePlayers.indexOf(p));
-            this.locations.get(this.locations.indexOf(plr.currentLocation)).removePlayer(p.name);
-            this.locations.get(this.locations.indexOf(l)).addPlayer(p.name);
+            this.locations.get(this.locations.indexOf(plr.getCurrentLocation())).removePlayer(p.getName());
+            this.locations.get(this.locations.indexOf(l)).addPlayer(p.getName());
         }
     }
 
     public List<String> listPlayersAt(Location l) {
         if (this.locations.contains(l)) {
-            return this.locations.get(this.locations.indexOf(l)).players;
+            return this.locations.get(this.locations.indexOf(l)).listPlayerNames();
         }
         return null;
     }
@@ -179,7 +179,7 @@ public class World implements MUD {
     }
 
     public void removeItem(Location l, Item i) {
-        this.locations.get(this.locations.indexOf(l)).items.remove(i);
+        this.locations.get(this.locations.indexOf(l)).listItems().remove(i);
     }
 
     public boolean isUniquePlayerName(String name) {

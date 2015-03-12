@@ -7,17 +7,17 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class Location implements Serializable {
-    public String name;
-    public String description;
-    public List<String> players;
-    public List<Item> items;
-    public Map<Direction, Location> destinations;
+    private String name;
+    private String description;
+    private List<String> playersNames;
+    private List<Item> items;
+    private Map<Direction, Location> destinations;
 
     public Location(String name) {
         this.name         = name;
         this.description  = "";
         this.items        = new ArrayList<Item>();
-        this.players      = new ArrayList<String>();
+        this.playersNames = new ArrayList<String>();
         this.destinations = new HashMap<Direction, Location>();
     }
 
@@ -25,7 +25,7 @@ public class Location implements Serializable {
         this.name         = name;
         this.description  = description;
         this.items        = new ArrayList<Item>();
-        this.players      = new ArrayList<String>();
+        this.playersNames = new ArrayList<String>();
         this.destinations = new HashMap<Direction, Location>();
     }
 
@@ -33,12 +33,8 @@ public class Location implements Serializable {
         this.name         = name;
         this.description  = description;
         this.items        = items;
-        this.players      = new ArrayList<String>();
+        this.playersNames = new ArrayList<String>();
         this.destinations = new HashMap<Direction, Location>();
-    }
-
-    public void store(Item item) {
-        this.items.add(item);
     }
 
     public boolean equals(Object obj) {
@@ -63,12 +59,36 @@ public class Location implements Serializable {
         return this.name.hashCode();
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public Map<Direction, Location> getDestinations() {
+        return this.destinations;
+    }
+
+    public void store(Item item) {
+        this.items.add(item);
+    }
+
+    public List<Item> listItems() {
+        return this.items;
+    }
+
+    public List<String> listPlayerNames() {
+        return this.playersNames;
+    }
+
     public void addPlayer(String p) {
-        this.players.add(p);
+        this.playersNames.add(p);
     }
 
     public void removePlayer(String p) {
-        this.players.remove(p);
+        this.playersNames.remove(p);
     }
 
     public Location to_the(Direction d) {

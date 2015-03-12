@@ -30,8 +30,8 @@ class Path {
      * Creates a string from a {@link Path}.
      */
     public String toString() {
-        return this.startLocation.name + ":" + System.lineSeparator()
+        return this.startLocation.getName() + ":" + System.lineSeparator()
             + this.direction + " -> " + this.description + " to "
-            + this.destination.name;
+            + this.destination.getName();
     }
 }

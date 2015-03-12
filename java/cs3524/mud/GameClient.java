@@ -63,7 +63,7 @@ public class GameClient
 
                         if (confirmation.equals("") || positiveMatcher.matches()) {
                             player = new Player(username, 100.0);
-                            player.currentLocation = world.getStartingLocation();
+                            player.setCurrentLocation(world.getStartingLocation());
                             if (!world.join(player)) {
                                 System.out.println("There was a problem signing you up. Please try again.");
                             }
@@ -84,7 +84,7 @@ public class GameClient
                 }
             }
 
-            System.out.println("Welcome, " + player.name + ". Type a command to start.");
+            System.out.println("Welcome, " + player.getName() + ". Type a command to start.");
             System.out.println("Type 'help' or ?' if you need help.");
             String command = "";
             while (!command.equals("quit") && !command.equals("exit")) {
@@ -104,7 +104,7 @@ public class GameClient
                 Matcher takeWithoutParams = takeCmdWithoutParams.matcher(command);
 
                 List<Location> worldLocations = world.getLocations();
-                Location playerLocation = worldLocations.get(worldLocations.indexOf(player.currentLocation));
+                Location playerLocation = worldLocations.get(worldLocations.indexOf(player.getCurrentLocation()));
 
                 if (command.equals("help")) {
                     String response = world.manual();
@@ -116,26 +116,26 @@ public class GameClient
                 }
                 else if (command.equals("look")) {
                     String availableItems = "";
-                    if (!playerLocation.items.isEmpty()) {
-                        for (Item i : playerLocation.items) {
-                            if (playerLocation.items.indexOf(i) == playerLocation.items.size() - 1) {
+                    if (!playerLocation.listItems().isEmpty()) {
+                        for (Item i : playerLocation.listItems()) {
+                            if (playerLocation.listItems().indexOf(i) == playerLocation.listItems().size() - 1) {
                                 availableItems += " -  " + i.name;
                             }
                             else {
                                 availableItems += " -  " + i.name + System.lineSeparator();
                             }
                         }
-                        System.out.println(playerLocation.name + System.lineSeparator()
-                            + playerLocation.description + System.lineSeparator()
+                        System.out.println(playerLocation.getName() + System.lineSeparator()
+                            + playerLocation.getDescription() + System.lineSeparator()
                             + "Items:" + System.lineSeparator() + availableItems);
                     }
                     else {
-                        System.out.println(playerLocation.name + System.lineSeparator()
-                        + playerLocation.description);
+                        System.out.println(playerLocation.getName() + System.lineSeparator()
+                        + playerLocation.getDescription());
                     }
-                    List<String> playersHere = world.listPlayersAt(player.currentLocation);
+                    List<String> playersHere = world.listPlayersAt(player.getCurrentLocation());
                     if (playersHere.size() > 1) {
-                        playersHere.remove(player.name);
+                        playersHere.remove(player.getName());
                         System.out.println("Other players at this location:");
                         for (String playerName : playersHere) {
                             System.out.println(" -  " + playerName);
@@ -143,23 +143,23 @@ public class GameClient
                     }
                 }
                 else if (command.equals("status")) {
-                    System.out.println("You are " + player.name + ".");
-                    if (player.equipment.isEmpty()) {
+                    System.out.println("You are " + player.getName() + ".");
+                    if (player.listEquipment().isEmpty()) {
                         System.out.println("You have no items in the equipment.");
                     }
                     else {
                         System.out.println("Carrying:");
-                        for (Item i : player.equipment) {
+                        for (Item i : player.listEquipment()) {
                             System.out.println(i.name);
                         }
                     }
                 }
                 else if (goMatcher.matches()) {
                     Direction direction = Direction.valueOf(command.substring(3).toUpperCase());
-                    Location destination = world.from(player.currentLocation, direction);
+                    Location destination = world.from(player.getCurrentLocation(), direction);
                     if (destination != null) {
                         world.movePlayer(player, destination);
-                        player.currentLocation = destination;
+                        player.setCurrentLocation(destination);
                     }
                     else {
                         System.out.println("You can't go there.");
@@ -169,9 +169,9 @@ public class GameClient
                     StringTokenizer st = new StringTokenizer(command.substring(5), ",");
                     while (st.hasMoreTokens()) {
                         String itemSearchedFor = st.nextToken().trim();
-                        for (Item i : playerLocation.items) {
+                        for (Item i : playerLocation.listItems()) {
                             if (i.name.equals(itemSearchedFor)) {
-                                player.equipment.add(i);
+                                player.addToEquipment(i);
                                 world.removeItem(playerLocation, i);
                             }
                         }
@@ -186,15 +186,15 @@ public class GameClient
                     System.out.println("Usage:\ntake <item>");
                 }
                 else if (command.equals("where")) {
-                    System.out.println("Your current location is " + player.currentLocation.name);
-                    Map<Direction, Location> possibleDestinations = world.listAdjacentTo(player.currentLocation);
+                    System.out.println("Your current location is " + player.getCurrentLocation().getName());
+                    Map<Direction, Location> possibleDestinations = world.listAdjacentTo(player.getCurrentLocation());
                     if (possibleDestinations != null) {
                         System.out.println("You can go:");
                         List<Map.Entry<Direction, Location>> destinationsList =
                             new ArrayList<Map.Entry<Direction, Location>>(possibleDestinations.entrySet());
                         for (Map.Entry<Direction, Location> d : destinationsList) {
                             System.out.println(" -> " + d.getKey().toString().toLowerCase()
-                                + " to " + d.getValue().name);
+                                + " to " + d.getValue().getName());
                         }                        
                     }
                 }
