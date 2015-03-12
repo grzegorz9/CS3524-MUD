@@ -18,6 +18,10 @@ public class World implements MUD {
     private List<Path> paths;    // i.e. edges
 	private List<Player> activePlayers;
 
+    public String getName() {
+        return this.name;
+    }
+
 	private final String manual =
 		"Commands:\n"         +
 		" -  help\n"           +

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface MUD extends Remote {
+	public String getName() throws RemoteException;
 	public boolean join(Player p) throws RemoteException;
 	public void leave(Player p) throws RemoteException;
 	public Location getStartingLocation() throws RemoteException;

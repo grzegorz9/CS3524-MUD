@@ -1,40 +1,43 @@
 package cs3524.mud;
 
-import java.net.InetAddress;
-import java.rmi.Naming;
-import java.rmi.RMISecurityManager;
-import java.rmi.server.UnicastRemoteObject;
-import java.net.SocketPermission;
+import java.util.Vector;
+import java.rmi.RemoteException;
 
-public class GameServer {
-    public static void main(String args[]) {
-        if (args.length < 2) {
-            System.err.println("Usage:\njava GameServer <registryport> <serverport> <map_file>");
-            return;
+class GameServer implements GameSrvrIntfc {
+    private int serverPort;
+    private Vector<MUD> worlds;
+
+    public GameServer(int serverPort) {
+        this.serverPort = serverPort;
+        this.worlds = new Vector<MUD>();
+    }
+
+    public String listMUDs() throws RemoteException {
+        String response = "";
+        for (MUD world : worlds) {
+            response += " -  " + world.getName() + System.lineSeparator();
         }
-        try {
-            String hostname = "127.0.0.1";
-            int registryport = Integer.parseInt(args[0]);
-            int serviceport = Integer.parseInt(args[1]);
+        return response;
+    }
 
-            System.setProperty("java.security.policy", "mud.policy");
-            System.setSecurityManager(new RMISecurityManager());
+    public void addMUD(MUD m) {
+        this.worlds.add(m);
+    }
 
-            World gameService = new World(args[2]);
-            gameService.generateMap(args[3]);
-            gameService.placeItems(args[4]);
-            MUD stub =
-                (MUD)UnicastRemoteObject.exportObject(gameService, serviceport);
-
-            String regURL =
-                "rmi://" + hostname + ":" + registryport + "/GameServer";
-
-            System.out.println("Registering " + regURL);
-            Naming.rebind(regURL, stub);
+    public MUD getMUD(String name) throws RemoteException {
+        for (MUD world : worlds) {
+            if (world.getName().equals(name)) {
+                return world;
+            }
         }
-        catch (java.io.IOException e) {
-            System.err.println("Failed to register.");
-            e.printStackTrace();
+        return null;
+    }
+
+    public void dropMUD(String name) throws RemoteException {
+        for (MUD world : worlds) {
+            if (world.getName().equals(name)) {
+                worlds.remove(world);
+            }
         }
     }
 }
