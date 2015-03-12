@@ -30,6 +30,7 @@ public class World implements MUD {
 		" -  look\n"    +
 		" -  go <direction>\n" +
 		" -  take <items>";
+        
 	private final String introTutorial =
 		"Try typing 'look' to find out where you are.\n" +
 		"If you feel adventureous, you can visit any of the destinations\n" +

@@ -19,16 +19,22 @@ public class Server {
         String hostname = "127.0.0.1";
         int registryport = Integer.parseInt(args[0]);
         int serviceport = Integer.parseInt(args[1]);
+        int maxNumOfMUDs = Integer.parseInt(args[2]);
+        if (maxNumOfMUDs <= 0) {
+            System.err.println("The maximum number of MUD must be greater than zero.");
+            return;
+        }
 
         System.setProperty("java.security.policy", "mud.policy");
         System.setSecurityManager(new RMISecurityManager());
 
-        GameServer gameServer = new GameServer(serviceport);
+        GameServer gameServer = new GameServer(serviceport, maxNumOfMUDs);
+        int mudCount = 0;
         System.out.println("You can now add new worlds");
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         try {
             String line = in.readLine().trim();
-            while (!line.equals("end")) {
+            while (!line.equals("end") && mudCount < gameServer.getMaxMUDs()) {
                 StringTokenizer st = new StringTokenizer(line, " ");
                 while (st.hasMoreTokens()) {
                     String worldName = st.nextToken().trim();
@@ -40,8 +46,10 @@ public class Server {
                     newWorld.placeItems(itemFile);
                     MUD mud = (MUD)UnicastRemoteObject.exportObject(newWorld, serviceport);
                     gameServer.addMUD(mud);
+                    mudCount += 1;
 
                     System.out.println("Creating a new world " + worldName + " from " + mapFile + ", " + itemFile);
+                    if (mudCount == maxNumOfMUDs) { break; }
                     line = in.readLine().trim();
                 }
             }

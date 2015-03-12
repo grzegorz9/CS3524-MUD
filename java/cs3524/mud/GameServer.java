@@ -5,11 +5,17 @@ import java.rmi.RemoteException;
 
 class GameServer implements GameSrvrIntfc {
     private int serverPort;
+    private int maxMUDs;
     private Vector<MUD> worlds;
 
-    public GameServer(int serverPort) {
+    public GameServer(int serverPort, int maxMUDs) {
         this.serverPort = serverPort;
+        this.maxMUDs = maxMUDs;
         this.worlds = new Vector<MUD>();
+    }
+
+    public int getMaxMUDs() {
+        return this.maxMUDs;
     }
 
     public String listMUDs() throws RemoteException {
